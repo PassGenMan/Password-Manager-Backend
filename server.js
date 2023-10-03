@@ -12,6 +12,9 @@ const cookieParser= require('cookie-parser')
 const bcrypt= require('bcryptjs');
 const salt= bcrypt.genSaltSync(10);
 
+const jwt= require('jsonwebtoken')
+const secret= "kfnieurhiuh487683686*%&^$^%#gjhbc"
+
 const User = require('./models/User')
 
 mongoose.connect("mongodb+srv://iamnazmussaqib:password-manager-123@password-manager-cluste.cevsmhr.mongodb.net/?retryWrites=true&w=majority")
@@ -34,6 +37,36 @@ app.post('/register',async (req,res)=>{
         console.log(e);
         res.status(400).json(e);
     }
+})
+
+app.post('/login', async (req, res)=>{
+    const {username, password}= req.body;
+    const userDoc= await User.findOne({username});
+    const passOK= bcrypt.compareSync(password, userDoc.password);
+    if(passOK){
+        // res.json(userDoc)
+        jwt.sign({username, id: userDoc._id}, secret, {}, (err, token)=>{
+            if (err) throw err;
+            res.cookie('token', token).json({
+                username,
+                id: userDoc._id,
+            })
+        })
+    }else{
+        res.status(400).json("Wrong Credentials")
+    }
+})
+
+app.get('/profile', (req, res)=>{
+    const {token}= req.cookies;
+    jwt.verify(token, secret, {}, (err, info)=>{
+        if (err) throw err;
+        res.json(info);
+    })
+})
+
+app.post('/logout', (req,res)=>{
+    res.cookie('token', '').json('ok');
 })
 
 
