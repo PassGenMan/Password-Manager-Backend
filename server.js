@@ -16,6 +16,7 @@ const jwt= require('jsonwebtoken')
 const secret= "kfnieurhiuh487683686*%&^$^%#gjhbc"
 
 const User = require('./models/User')
+const Data= require('./models/Data')
 
 mongoose.connect("mongodb+srv://iamnazmussaqib:password-manager-123@password-manager-cluste.cevsmhr.mongodb.net/?retryWrites=true&w=majority")
 
@@ -67,6 +68,22 @@ app.get('/profile', (req, res)=>{
 
 app.post('/logout', (req,res)=>{
     res.cookie('token', '').json('ok');
+})
+
+app.post('/data', (req,res)=>{
+    const {token}= req.cookies;
+    jwt.verify(token, secret, {}, async (err, info)=>{
+        if (err) throw err;
+        const {title, note, pass}= req.body;
+        const postDoc= await Data.create({
+            title: title,
+            note: note,
+            pass: pass,
+            author: info.id,
+        })
+        res.json(postDoc);
+
+    })
 })
 
 
