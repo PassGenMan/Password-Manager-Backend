@@ -86,5 +86,18 @@ app.post('/data', (req,res)=>{
     })
 })
 
+app.get('/data',(req,res)=>{
+    const {token}= req.cookies;
+    jwt.verify(token, secret, {}, async (err, info)=>{
+        if(err){
+            res.json([]);
+        }
+        else{
+            res.json(await Data.find({author: info.id})
+            .populate('author')
+            .sort({createdAt:-1}));
+        }
+    })
+})
 
 app.listen(4000);
