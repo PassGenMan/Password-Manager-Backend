@@ -100,4 +100,10 @@ app.get('/data',(req,res)=>{
     })
 })
 
+app.delete('/data/:id', (req, res)=>{
+    Data.deleteOne({_id: req.params.id}).then(()=>{
+        res.json("deleted")
+    })
+})
+
 app.listen(4000);
