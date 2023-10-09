@@ -1,10 +1,9 @@
-// server renders here
+const url =require('./frontendURL')
+
 const express= require('express');
-const fs= require('fs');
 const bodyParser= require('body-parser');
 const cors= require('cors');
 const mongoose = require('mongoose');
-const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config();
 
 const cookieParser= require('cookie-parser')
@@ -13,15 +12,15 @@ const bcrypt= require('bcryptjs');
 const salt= bcrypt.genSaltSync(10);
 
 const jwt= require('jsonwebtoken')
-const secret= "kfnieurhiuh487683686*%&^$^%#gjhbc"
+const secret= process.env.secret
 
 const User = require('./models/User')
 const Data= require('./models/Data')
 
-mongoose.connect("mongodb+srv://iamnazmussaqib:password-manager-123@password-manager-cluste.cevsmhr.mongodb.net/?retryWrites=true&w=majority")
+mongoose.connect(process.env.URI)
 
 const app= express();
-app.use(cors({credentials:true, origin:'http://localhost:3000'}));
+app.use(cors({credentials:true, origin: url}));
 app.use(express.json());
 app.use(cookieParser());
 
