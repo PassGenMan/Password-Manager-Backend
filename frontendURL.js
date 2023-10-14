@@ -1,3 +1,3 @@
-const url= "http://localhost:3000";
+const url= "https://password-manager-passman.vercel.app/";
 
 module.exports= url;
