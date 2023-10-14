@@ -20,7 +20,7 @@ const Data= require('./models/Data')
 mongoose.connect(process.env.URI)
 
 const app= express();
-app.use(cors({credentials:true, origin: url}));
+app.use(cors({credentials:true, origin: url, methods: "*"}));
 app.use(express.json());
 app.use(cookieParser());
 
