@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/nazmus-saqib008/password-manager-backend.git"
   },
+  "engines": {
+    "node": ">=14.20.1"
+  },
   "author": "nazmus-saqib008",
   "license": "ISC",
   "bugs": {
