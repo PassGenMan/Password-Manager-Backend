@@ -1,3 +1,3 @@
-const url= 'https://password-manager-passman.vercel.app';
+const url= 'https://password-manager-hacktoberfest.vercel.app';
 
 module.exports= url;
