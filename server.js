@@ -80,7 +80,7 @@ app.post('/data', (req,res)=>{
             pass: pass,
             author: info.id,
         })
-        res.json(postDoc);
+        res.json(postDoc).header('Access-Control-Allow-Origin', '*');;
 
     })
 })
