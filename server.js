@@ -20,8 +20,8 @@ const Data= require('./models/Data')
 mongoose.connect(process.env.URI)
 
 const app= express();
-// app.use(cors({credentials:true ,origin: url ,allowedHeaders: 'Content-Type, Origin, X-Requested-With, Accept' ,methods: 'GET,OPTIONS,POST,DELETE'}));
-app.use(cors({origin: url ,allowedHeaders: 'Content-Type, Origin, X-Requested-With, Accept'}));
+app.use(cors({credentials:true ,origin: url ,allowedHeaders: 'Content-Type, Origin, X-Requested-With, Accept' ,methods: 'GET,OPTIONS,POST,DELETE'}));
+// app.use(cors({origin: url ,allowedHeaders: 'Content-Type, Origin, X-Requested-With, Accept'}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -81,7 +81,7 @@ app.post('/data', (req,res)=>{
             pass: pass,
             author: info.id,
         })
-        res.json(postDoc);
+        res.header("Allow-Access-Cross-Origin",url).json(postDoc);
 
     })
 })
