@@ -20,7 +20,7 @@ const Data= require('./models/Data')
 mongoose.connect(process.env.URI)
 
 const app= express();
-app.use(cors({credentials:true ,origin: url ,vary: 'Origin' ,allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'application/json'] ,methods: 'GET,OPTIONS,POST,DELETE'}));
+app.use(cors({credentials:true ,origin: url ,vary: 'Origin' ,allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept'] ,methods: 'GET,OPTIONS,POST,DELETE'}));
 // app.use(cors({credentials: true, origin: url}));
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", url);
