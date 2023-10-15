@@ -81,7 +81,7 @@ app.post('/data', (req,res)=>{
             pass: pass,
             author: info.id,
         })
-        res.header("Allow-Access-Cross-Origin",url).json(postDoc);
+        res.header("Access-Control-Allow-Origin",url).json(postDoc);
 
     })
 })
