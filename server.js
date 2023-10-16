@@ -20,16 +20,16 @@ const Data= require('./models/Data')
 mongoose.connect(process.env.URI)
 
 const app= express();
-// app.use(cors({credentials:true ,origin: url ,vary: 'Origin' ,allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept'] ,methods: 'GET,OPTIONS,POST,DELETE'}));
-app.use(cors({credentials: true, origin: url}));
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", url);
-//     res.header("Access-Control-Allow-Credentials", true);
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-//     res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-//     res.header('Vary', 'Origin')
-//     next();
-// });
+// app.use(cors({credentials:true ,origin: url ,vary: 'Origin' ,allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Authorization'] ,methods: 'GET,OPTIONS,POST,DELETE'}));
+// app.use(cors({credentials: true, origin: url}));
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", url);
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,HEAD');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    // res.header('Vary', 'Origin')
+    next();
+});
 app.use(express.json());
 app.use(cookieParser());
 
