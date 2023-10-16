@@ -20,19 +20,21 @@ const Data= require('./models/Data')
 mongoose.connect(process.env.URI)
 
 const app= express();
-// app.use(cors({credentials:true ,origin: url ,vary: 'Origin' ,allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Authorization'] ,methods: 'GET,OPTIONS,POST,DELETE'}));
+app.use(cors({credentials:true ,origin: url ,vary: 'Origin' ,allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Authorization'] ,methods: 'GET,OPTIONS,POST,DELETE'}));
 // app.use(cors({credentials: true, origin: url}));
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", url);
-    res.header("Access-Control-Allow-Credentials", true);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,HEAD');
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    // res.header('Vary', 'Origin')
-    next();
-});
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", url);
+//     res.header("Access-Control-Allow-Credentials", true);
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,HEAD');
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//     // res.header('Vary', 'Origin')
+//     next();
+// });
 app.use(express.json());
 app.use(cookieParser());
 
+
+app.options('/register',cors())
 app.post('/register',async (req,res)=>{
     const {username, password}= req.body;
     try{
@@ -66,6 +68,7 @@ app.post('/login', async (req, res)=>{
     }
 })
 
+app.options('/profile',cors())
 app.get('/profile', (req, res)=>{
     const {token}= req.cookies;
     jwt.verify(token, secret, {}, (err, info)=>{
@@ -78,6 +81,7 @@ app.post('/logout', (req,res)=>{
     res.cookie('token', '').json('ok');
 })
 
+app.options('/data', cors())
 app.post('/data', (req,res)=>{
     const {token}= req.cookies;
     jwt.verify(token, secret, {}, async (err, info)=>{
