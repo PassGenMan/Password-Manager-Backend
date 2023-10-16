@@ -33,8 +33,6 @@ app.use(cors({credentials:true ,origin: url ,vary: 'Origin' ,allowedHeaders: ['C
 app.use(express.json());
 app.use(cookieParser());
 
-
-app.options('/register',cors())
 app.post('/register',async (req,res)=>{
     const {username, password}= req.body;
     try{
@@ -68,8 +66,7 @@ app.post('/login', async (req, res)=>{
     }
 })
 
-app.options('/profile',cors())
-app.get('/profile', (req, res)=>{
+app.get('/profile', async (req, res)=>{
     const {token}= req.cookies;
     jwt.verify(token, secret, {}, (err, info)=>{
         if (err) throw err;
@@ -77,12 +74,11 @@ app.get('/profile', (req, res)=>{
     })
 })
 
-app.post('/logout', (req,res)=>{
+app.post('/logout', async (req,res)=>{
     res.cookie('token', '').json('ok');
 })
 
-app.options('/data', cors())
-app.post('/data', (req,res)=>{
+app.post('/data', async (req,res)=>{
     const {token}= req.cookies;
     jwt.verify(token, secret, {}, async (err, info)=>{
         if (err) throw err;
@@ -98,7 +94,7 @@ app.post('/data', (req,res)=>{
     })
 })
 
-app.get('/data',(req,res)=>{
+app.get('/data', async (req,res)=>{
     const {token}= req.cookies;
     jwt.verify(token, secret, {}, async (err, info)=>{
         if(err){
@@ -112,7 +108,7 @@ app.get('/data',(req,res)=>{
     })
 })
 
-app.delete('/data/:id', (req, res)=>{
+app.delete('/data/:id', async (req, res)=>{
     Data.deleteOne({_id: req.params.id}).then(()=>{
         res.json("deleted")
     })
