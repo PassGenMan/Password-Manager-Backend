@@ -20,7 +20,13 @@ const Data= require('./models/Data')
 mongoose.connect(process.env.URI)
 
 const app= express();
-app.use(cors({credentials:true ,origin: url ,vary: 'Origin' ,allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Authorization'] ,methods: 'GET,OPTIONS,POST,DELETE'}));
+app.use(cors({
+    credentials:true ,
+    origin: url ,
+    vary: 'Origin' ,
+    allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Authorization'] ,
+    methods: 'GET,OPTIONS,POST,DELETE'
+}));
 // app.use(cors({credentials: true, origin: url}));
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", url);
@@ -56,7 +62,7 @@ app.post('/login', async (req, res)=>{
         // res.json(userDoc)
         jwt.sign({username, id: userDoc._id}, secret, {}, (err, token)=>{
             if (err) throw err;
-            res.cookie('token', token,{sameSite:'None'}).json({
+            res.cookie('token', token,{sameSite:'none'}).json({
                 username,
                 id: userDoc._id,
             })
@@ -66,7 +72,7 @@ app.post('/login', async (req, res)=>{
     }
 })
 
-app.get('/profile', async (req, res)=>{
+app.get('/profile', (req, res)=>{
     const {token}= req.cookies;
     jwt.verify(token, secret, {}, (err, info)=>{
         if (err) throw err;
@@ -74,11 +80,11 @@ app.get('/profile', async (req, res)=>{
     })
 })
 
-app.post('/logout', async (req,res)=>{
+app.post('/logout', (req,res)=>{
     res.cookie('token', '').json('ok');
 })
 
-app.post('/data', async (req,res)=>{
+app.post('/data', (req,res)=>{
     const {token}= req.cookies;
     jwt.verify(token, secret, {}, async (err, info)=>{
         if (err) throw err;
@@ -94,7 +100,7 @@ app.post('/data', async (req,res)=>{
     })
 })
 
-app.get('/data', async (req,res)=>{
+app.get('/data', (req,res)=>{
     const {token}= req.cookies;
     jwt.verify(token, secret, {}, async (err, info)=>{
         if(err){
@@ -108,7 +114,7 @@ app.get('/data', async (req,res)=>{
     })
 })
 
-app.delete('/data/:id', async (req, res)=>{
+app.delete('/data/:id', (req, res)=>{
     Data.deleteOne({_id: req.params.id}).then(()=>{
         res.json("deleted")
     })
