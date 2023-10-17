@@ -74,10 +74,14 @@ app.post('/login', async (req, res)=>{
 
 app.get('/profile', (req, res)=>{
     const {token}= req.cookies;
-    jwt.verify(token, secret, {}, (err, info)=>{
-        if (err) throw err;
-        res.json(info);
-    })
+    if(token){
+        jwt.verify(token, secret, {}, (err, info)=>{
+            if (err) throw err;
+            res.json(info);
+        })
+    }else{
+        res.json(null);
+    }
 })
 
 app.post('/logout', (req,res)=>{
