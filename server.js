@@ -21,7 +21,7 @@ mongoose.connect(process.env.URI)
 
 const app= express();
 app.use(cors({
-    credentials:true ,
+    credentials: true ,
     origin: url ,
     vary: 'Origin' ,
     allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Authorization'] ,
@@ -73,15 +73,11 @@ app.post('/login', async (req, res)=>{
 })
 
 app.get('/profile', (req, res)=>{
-    if(req.cookies){
-        const {token}= req.cookies;
-        jwt.verify(token, secret, {}, (err, info)=>{
-            if (err) throw err;
-            res.json(info);
-        })
-    }else{
-        res.json(null);
-    }
+    const {token}= req.cookies;
+    jwt.verify(token, secret, {}, (err, info)=>{
+        if (err) throw err;
+        res.json(info);
+    })
 })
 
 app.post('/logout', (req,res)=>{
