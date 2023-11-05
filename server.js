@@ -25,7 +25,8 @@ app.use(cors({
     origin: url ,
     vary: 'Origin' ,
     allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Authorization'] ,
-    methods: 'GET,OPTIONS,POST,DELETE'
+    methods: 'GET,OPTIONS,POST,DELETE',
+    optionsSuccessStatus: 200,
 }));
 // app.use(cors({credentials: true, origin: url}));
 // app.use(function(req, res, next) {
@@ -62,7 +63,7 @@ app.post('/login', async (req, res)=>{
         // res.json(userDoc)
         jwt.sign({username, id: userDoc._id}, secret, {}, (err, token)=>{
             if (err) throw err;
-            res.cookie('token', token,{sameSite:'none'}).json({
+            res.cookie('token', token).json({
                 username,
                 id: userDoc._id,
             })
