@@ -26,7 +26,6 @@ app.use(cors({
     vary: 'Origin' ,
     allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Authorization'] ,
     methods: 'GET,OPTIONS,POST,DELETE',
-    optionsSuccessStatus: 200,
 }));
 // app.use(cors({credentials: true, origin: url}));
 // app.use(function(req, res, next) {
