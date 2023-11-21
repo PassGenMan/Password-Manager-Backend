@@ -105,6 +105,7 @@ app.get('/data', (req,res)=>{
     jwt.verify(token, secret, {}, async (err, info)=>{
         if(err){
             res.json([]);
+            throw err;
         }
         else{
             res.json(await Data.find({author: info.id})
