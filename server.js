@@ -104,6 +104,7 @@ app.get('/data', (req,res)=>{
     const {token}= req.cookies;
     jwt.verify(token, secret, {}, async (err, info)=>{
         if(err){
+            console.log(err);
             res.json([]);
         }
         else{
