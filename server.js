@@ -74,10 +74,12 @@ app.post('/login', async (req, res)=>{
 
 app.get('/profile', (req, res)=>{
     const {token}= req.cookies;
-    jwt.verify(token, secret, {}, (err, info)=>{
-        if (err) throw err;       
-        res.json(info);
-    })
+    if(token){
+        jwt.verify(token, secret, {}, (err, info)=>{
+            if (err) throw err;       
+            res.json(info);
+        })
+    }
 })
 
 app.post('/logout', (req,res)=>{
@@ -101,18 +103,23 @@ app.post('/data', (req,res)=>{
 })
 
 app.get('/data', (req,res)=>{
+    
     const {token}= req.cookies;
-    jwt.verify(token, secret, {}, async (err, info)=>{
-        if(err){
-            console.log(err);
-            res.json([]);
-        }
-        else{
-            res.json(await Data.find({author: info.id})
-            .populate('author')
-            .sort({createdAt:-1}));
-        }
-    })
+    if(token){
+        jwt.verify(token, secret, {}, async (err, info)=>{
+            if(err){
+                console.log(err);
+                res.json([]);
+            }
+            else{
+                res.json(await Data.find({author: info.id})
+                .populate('author')
+                .sort({createdAt:-1}));
+            }
+        })
+    }else{
+        res.json([]);
+    }
 })
 
 app.delete('/data/:id', (req, res)=>{
