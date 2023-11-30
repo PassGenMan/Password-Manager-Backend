@@ -20,14 +20,20 @@ const Data= require('./models/Data')
 mongoose.connect(process.env.URI)
 
 const app= express();
-// app.use(cors({credentials:true ,origin: url ,vary: 'Origin' ,allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept'] ,methods: 'GET,OPTIONS,POST,DELETE'}));
-app.use(cors({credentials: true, origin: url}));
+app.use(cors({
+    credentials: true ,
+    origin: url ,
+    vary: 'Origin' ,
+    allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'Authorization'] ,
+    methods: 'GET,OPTIONS,POST,DELETE',
+}));
+// app.use(cors({credentials: true, origin: url}));
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", url);
 //     res.header("Access-Control-Allow-Credentials", true);
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-//     res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-//     res.header('Vary', 'Origin')
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,HEAD');
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//     // res.header('Vary', 'Origin')
 //     next();
 // });
 app.use(express.json());
@@ -54,9 +60,13 @@ app.post('/login', async (req, res)=>{
     const passOK= bcrypt.compareSync(password, userDoc.password);
     if(passOK){
         // res.json(userDoc)
-        jwt.sign({username, id: userDoc._id}, secret, {}, (err, token)=>{
+        jwt.sign({username, id: userDoc._id}, secret, { expiresIn: '1h' }, (err, token)=>{
             if (err) throw err;
-            res.cookie('token', token,{sameSite:'None'}).json({
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: true,
+                sameSite:'none'
+            }).json({
                 username,
                 id: userDoc._id,
             })
@@ -68,10 +78,12 @@ app.post('/login', async (req, res)=>{
 
 app.get('/profile', (req, res)=>{
     const {token}= req.cookies;
-    jwt.verify(token, secret, {}, (err, info)=>{
-        if (err) throw err;
-        res.json(info);
-    })
+    if(token){
+        jwt.verify(token, secret, {}, (err, info)=>{
+            if (err) throw err;       
+            res.json(info);
+        })
+    }
 })
 
 app.post('/logout', (req,res)=>{
@@ -94,18 +106,24 @@ app.post('/data', (req,res)=>{
     })
 })
 
-app.get('/data',(req,res)=>{
+app.get('/data', (req,res)=>{
+    
     const {token}= req.cookies;
-    jwt.verify(token, secret, {}, async (err, info)=>{
-        if(err){
-            res.json([]);
-        }
-        else{
-            res.json(await Data.find({author: info.id})
-            .populate('author')
-            .sort({createdAt:-1}));
-        }
-    })
+    if(token){
+        jwt.verify(token, secret, {}, async (err, info)=>{
+            if(err){
+                console.log(err);
+                res.json([]);
+            }
+            else{
+                res.json(await Data.find({author: info.id})
+                .populate('author')
+                .sort({createdAt:-1}));
+            }
+        })
+    }else{
+        res.json([]);
+    }
 })
 
 app.delete('/data/:id', (req, res)=>{
